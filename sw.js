@@ -1,6 +1,6 @@
 // Network-first for the app's own files, so updates show up on the next open;
 // falls back to the cached copy when offline. API calls to OpenAI are never cached.
-const CACHE = "snap-macros-v1";
+const CACHE = "snap-macros-v2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./apple-touch-icon.png", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener("activate", e => {

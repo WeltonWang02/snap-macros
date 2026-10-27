@@ -346,11 +346,14 @@ textarea.input { min-height: 84px; resize: vertical; }
 /* ---------- Config ---------- */
 const NS = "snapmacros.";
 const MODELS = [
-  { id: "gpt-5.5", label: "GPT-5.5 (recommended)", effort: "none" },
-  { id: "gpt-5.1", label: "GPT-5.1 (as accurate, a bit cheaper)", effort: "none" },
-  { id: "gpt-4.1", label: "GPT-4.1 (fast, runs low)", effort: null },
+  { id: "gpt-6.1-terra", label: "GPT-6.1 Terra (recommended)", effort: "none" },
+  { id: "gpt-5.5", label: "GPT-5.5 (can mistake side cups for soup)", effort: "none" },
+  { id: "gpt-6.1-sol", label: "GPT-6.1 Sol (slower, ~10 s)", effort: "low" },
   { id: "gpt-4.1-mini", label: "GPT-4.1 mini (fastest, cheapest)", effort: null },
 ];
+const DEFAULT_MODEL = "gpt-6.1-terra";
+// One-time move from the old default to Terra for anyone who saved settings before the switch.
+try { if (localStorage.getItem(NS + "model") === JSON.stringify("gpt-5.5") && !localStorage.getItem(NS + "modelV2")) localStorage.setItem(NS + "model", JSON.stringify(DEFAULT_MODEL)); localStorage.setItem(NS + "modelV2", "1"); } catch {}
 // FDA Daily Values (adults, 2,000 kcal reference). kind: goal = aim to reach, limit = aim to stay under.
 const NUTR = [
   { k: "calories", label: "Calories", unit: "kcal", dv: 2000, kind: "goal" },
@@ -408,7 +411,7 @@ function goals() {
   for (const n of NUTR) out[n.k] = Number(g[n.k]) > 0 ? Number(g[n.k]) : n.dv;
   return out;
 }
-function settings() { return { key: ls.get("key", ""), model: ls.get("model", "gpt-5.5") }; }
+function settings() { return { key: ls.get("key", ""), model: ls.get("model", DEFAULT_MODEL) }; }
 
 let toastTimer;
 function toast(msg, ms = 2200) {
